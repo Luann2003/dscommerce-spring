@@ -1,7 +1,11 @@
 package com.devsupeior.dscommerce1.entities;
 
-import java.time.Instant;
+import java.time.Instant
+;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import com.devsupeior.dscommerce1.enums.OrderStatus;
 
@@ -13,7 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -36,6 +40,9 @@ public class Order {
 
 	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
 	private Payment payment;
+	
+	@OneToMany(mappedBy = "id.order")
+	private Set<OrderItem> item = new HashSet<>();
 	
 	public Order() {
 	}
@@ -83,6 +90,14 @@ public class Order {
 	public void setClient(User client) {
 		this.client = client;
 	}
+
+	public void setItem(Set<OrderItem> item) {
+		this.item = item;
+	}
+
+	public List<Product> getProducts() {
+		return item.stream().map(x -> x.getProduct()).toList();
+		}
 
 	@Override
 	public int hashCode() {
